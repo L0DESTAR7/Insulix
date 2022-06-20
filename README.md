@@ -1,6 +1,6 @@
 # insulix
 
-A new Flutter project.
+First "serious" ish? Kinda? mobile app project ! :D
 
 ## Getting Started
 
