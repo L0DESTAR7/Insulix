@@ -9,6 +9,9 @@ import 'package:insulix/reminder_log.dart';
 import 'package:rive/rive.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'Boxes.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+
+import 'alarmCall.dart';
 
 
 
@@ -325,8 +328,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // The following code calculates the difference in date between
     // "inBlood" insulinLog and DateTime.now() and subtracts the adequate ammount
 
-    // TODO: For testing purposes it decrements by 1 every 2 seconds.
-    // TODO: SHOULD BE CHANGED LATER
     var lastSteps = insulinBox.get("steps");
     double lastFastStep = 0;
     double lastBasalStep = 0;
@@ -339,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
       fastStep = lastFastStep;
       basalStep = lastBasalStep;
     }
-     var updateInBlood = insulinBox.get("inBlood");
+    var updateInBlood = insulinBox.get("inBlood");
     double lastFastInsulin = 0;
     double lastBasalInsulin = 0;
     int dateDiff = 0;
@@ -353,12 +354,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+
     Timer.periodic(Duration(seconds: 2),(Timer t){
       var inBloodLog = insulinBox.get("inBlood");
-      fastActingInsulin = inBloodLog!.fastinsulin_dose;
+      if (inBloodLog == null){
+        insulinBox.put("inBlood", InsulinLog(0,0,2,DateTime.now()));
+        print("inBlood was not found, a new one was created !");
+        inBloodLog = insulinBox.get("inBlood");
+      }
       print("oui");
-      basalInsulin = inBloodLog.basalinsulin_dose;
+      basalInsulin = inBloodLog!.basalinsulin_dose;
+      fastActingInsulin = inBloodLog.fastinsulin_dose;
       var maxLog = insulinBox.get("maxLog");
+      if (maxLog == null){
+        insulinBox.put("maxLog",InsulinLog(1,1,3,DateTime.now()));
+        print("maxLog was not found, a new one was created !");
+        maxLog = insulinBox.get("maxLog");
+      }
       maxFast = maxLog!.fastinsulin_dose;
       print("oui");
       maxBasal = maxLog.basalinsulin_dose;
@@ -1356,7 +1368,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fastacting_insulin_controller.clear();
                               basal_insulin_controller.clear();
                               inInsulinLog = false;
-                              currentGlucoseLog = GlucoseLog(0,0,DateTime.now()); // TODO: replace with insulin log reset
+                              currentInsulinLog = InsulinLog(0,0,0,DateTime.now());
                               displayInsulinTime = false;
                               print("The current state is:\ninHome = ${inHome} | inDrawer = ${inDrawer} "
                                   "| inGlucoseLog = ${inGlucoseLog} | inMainButton = ${inMainButton}"
@@ -1497,7 +1509,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                             setState(() {
                               dateTimeInsulin = newDateTime;
-                              // TODO: Fill data collection object with dateTimeInsulin here!
                               currentInsulinLog.dateTime = dateTimeInsulin;
                             });
                           },
@@ -1522,6 +1533,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           // --------------------------------------------
                           // TODO: SAVE INSULIN LOG TO PERSISTENT MEMORY!
                           final insulinBox = Boxes.getInsulinLogs();
+                          if (DateTime.now().difference(currentInsulinLog.dateTime!).inHours >= 3){
+                            print("DIFFERENCE GREATER THAN 3");
+                            currentInsulinLog = InsulinLog(0,0,0,DateTime.now());
+                            insulinBox.add(currentInsulinLog);
+                            print("New log has been added to box!");
+                          }
+                          else {
+                            insulinBox.add(currentInsulinLog);
+                            print("New log has been added to box!");
+                            var dateDiff = DateTime.now().difference(currentInsulinLog.dateTime!).inMinutes;
+                            var addedFastInsulin = currentInsulinLog.fastinsulin_dose * (1-(dateDiff/180));
+                            var addedBasalInsulin = currentInsulinLog.basalinsulin_dose *(1-(dateDiff/480));
+                            updateInBlood(addedFastInsulin,
+                                addedBasalInsulin);
+                          }
                           // --------------------------------------------
 
                           setState(() {
@@ -1530,20 +1556,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("The currentInsulin log is: ${currentInsulinLog}");
                             print("NOW = ${DateTime.now()} | LOG TIME = ${currentInsulinLog.dateTime}");
                             print(DateTime.now().difference(currentInsulinLog.dateTime!).inHours);
-                            if (DateTime.now().difference(currentInsulinLog.dateTime!).inHours >= 3){
-                              print("DIFFERENCE GREATER THAN 3");
-                              insulinBox.add(currentInsulinLog);
-                              print("New log has been added to box!");
-                            }
-                            else {
-                              insulinBox.add(currentInsulinLog);
-                              print("New log has been added to box!");
-                              var dateDiff = DateTime.now().difference(currentInsulinLog.dateTime!).inMinutes;
-                              var addedFastInsulin = currentInsulinLog.fastinsulin_dose * (1-(dateDiff/180));
-                              var addedBasalInsulin = currentInsulinLog.basalinsulin_dose *(1-(dateDiff/480));
-                              updateInBlood(addedFastInsulin,
-                                  addedBasalInsulin);
-                            }
                             print("The current state is:\ninHome = ${inHome} | inDrawer = ${inDrawer} "
                                 "| inGlucoseLog = ${inGlucoseLog} | inMainButton = ${inMainButton}"
                                 " | inInsulinLog = ${inInsulinLog}\nState"
@@ -1651,11 +1663,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected MONDAY!");
                             monday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(0)){
-                                currentReminderLog.days.remove(0);
+                              if (currentReminderLog.days.contains(2)){
+                                currentReminderLog.days.remove(2);
                               }
                               else{
-                                currentReminderLog.days.add(0);
+                                currentReminderLog.days.add(2);
                               }
                             });
                           },
@@ -1675,11 +1687,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected TUESDAY!");
                             tuesday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(1)){
-                                currentReminderLog.days.remove(1);
+                              if (currentReminderLog.days.contains(3)){
+                                currentReminderLog.days.remove(3);
                               }
                               else{
-                                currentReminderLog.days.add(1);
+                                currentReminderLog.days.add(3);
                               }
                             });
                           },
@@ -1699,11 +1711,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected WEDNESDAY!");
                             wednesday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(2)){
-                                currentReminderLog.days.remove(2);
+                              if (currentReminderLog.days.contains(4)){
+                                currentReminderLog.days.remove(4);
                               }
                               else{
-                                currentReminderLog.days.add(2);
+                                currentReminderLog.days.add(4);
                               }
                             });
                           },
@@ -1723,11 +1735,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected THURSDAY!");
                             thursday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(3)){
-                                currentReminderLog.days.remove(3);
+                              if (currentReminderLog.days.contains(5)){
+                                currentReminderLog.days.remove(5);
                               }
                               else{
-                                currentReminderLog.days.add(3);
+                                currentReminderLog.days.add(5);
                               }
                             });
                           },
@@ -1747,11 +1759,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected FRIDAY!");
                             friday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(4)){
-                                currentReminderLog.days.remove(4);
+                              if (currentReminderLog.days.contains(6)){
+                                currentReminderLog.days.remove(6);
                               }
                               else{
-                                currentReminderLog.days.add(4);
+                                currentReminderLog.days.add(6);
                               }
                             });
                           },
@@ -1771,11 +1783,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected SATURDAY!");
                             saturday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(5)){
-                                currentReminderLog.days.remove(5);
+                              if (currentReminderLog.days.contains(7)){
+                                currentReminderLog.days.remove(7);
                               }
                               else{
-                                currentReminderLog.days.add(5);
+                                currentReminderLog.days.add(7);
                               }
                             });
                           },
@@ -1795,11 +1807,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("User selected SUNDAY!");
                             sunday_click?.fire();
                             setState(() {
-                              if (currentReminderLog.days.contains(6)){
-                                currentReminderLog.days.remove(6);
+                              if (currentReminderLog.days.contains(1)){
+                                currentReminderLog.days.remove(1);
                               }
                               else{
-                                currentReminderLog.days.add(6);
+                                currentReminderLog.days.add(1);
                               }
                             });
                           },
@@ -1901,10 +1913,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               " | inInsulinLog = ${inInsulinLog}\nState"
                               " variables changing soon due to transition time: inMainButton | inGlucoseLog");
                           print("DAYS = ${currentReminderLog.days}");
-                          FlutterAlarmClock.createAlarm(dateTimeReminder.hour, dateTimeReminder.minute,
-                              skipUi: true, title: currentReminderLog.comment);
-                          currentReminderLog = ReminderLog([], DateTime.now(), false, "");
                         });
+                        print("Parameters passed are:\n"
+                            "HOUR : MINUTES = ${currentReminderLog.dateTime.hour} : ${currentReminderLog.dateTime.minute}\n"
+                            "DAYS = ${currentReminderLog.days }\n"
+                            "MESSAGE = ${currentReminderLog.comment}");
+                        MyAlarmManager.createPeriodicAlarm(currentReminderLog.dateTime.hour,
+                            currentReminderLog.dateTime.minute,currentReminderLog.days, title: currentReminderLog.comment);
+                        currentReminderLog = ReminderLog([], DateTime.now(), false, "");
+                        haschoosen_TimeReminder = false;
                         Future.delayed(Duration(seconds: 1),(){
                           setState(() {
                             reminder_comment_controller.clear();

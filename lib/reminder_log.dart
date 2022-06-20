@@ -1,6 +1,6 @@
 
 class ReminderLog {
-  List<int> days = []; // MON = 0 | .... | SUN = 6
+  List<int> days = []; // SUN = 1 | MON = 2 | ... | SAT = 7. View "https://developer.android.com/reference/java/util/Calendar#SUNDAY" for more info.
   DateTime dateTime = DateTime.now();
   bool periodic = false;
   String comment = "";
