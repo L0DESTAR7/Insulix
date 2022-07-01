@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'insulin_log.g.dart';
+part '../model adapters/insulin_log.g.dart';
 
 // TODO: THERE IS A SPECIAL INSULIN LOG IN THE INSULINLOG BOX. WITH THE KEY "inBlood" THIS LOG CONTAINS THE CURRENT VALUE IN BLOOD OF INSULIN
 @HiveType(typeId: 2)

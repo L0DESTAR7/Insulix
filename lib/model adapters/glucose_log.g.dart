@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'glucose_log.dart';
+part of '../models/glucose_log.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator

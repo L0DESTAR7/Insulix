@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:insulix/glucose_log.dart';
+import 'package:insulix/models/glucose_log.dart';
 
 import 'insulin_log.dart';
 

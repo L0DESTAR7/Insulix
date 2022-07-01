@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "110334654869",
+    "project_id": "insulix-d7161",
+    "storage_bucket": "insulix-d7161.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110334654869:android:431b16ab78c4be2c1c9e9c",
+        "android_client_info": {
+          "package_name": "com.example.insulix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110334654869-25dac4jb2j5im343ggg8hfbdqbs9h1au.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAff_BWJ04MXkK9dg5f9ECNHkoljMy7c4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110334654869-25dac4jb2j5im343ggg8hfbdqbs9h1au.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

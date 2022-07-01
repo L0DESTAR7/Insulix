@@ -3,15 +3,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:insulix/glucose_log.dart';
-import 'package:insulix/insulin_log.dart';
-import 'package:insulix/reminder_log.dart';
+import 'package:insulix/models/glucose_log.dart';
+import 'package:insulix/models/insulin_log.dart';
+import 'package:insulix/models/reminder_log.dart';
 import 'package:rive/rive.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
-import 'Boxes.dart';
+import '../models/Boxes.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import '../models/alarmCall.dart';
+import '../services/auth_service.dart';
+import 'get_started.dart' as get_started;
 
-import 'alarmCall.dart';
 
 
 
@@ -57,11 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
   double maxBasal = 123;
   final glucoseBox = Boxes.getGlucoseLogs(); // Creates an instance of GlucoseLogs BOX.
   final insulinBox = Boxes.getInsulinLogs(); // Creates an instance of InsulinLogs BOX.
-  bool noLatest = false; // This variable is a failure xD. Will be removed later.
+  bool noLatest = false;
   double fastStep = 0; // The value by which Fast acting insulin is decremented depending on the refresh rate.
   double basalStep = 0;// The value by which Basal insulin is decremented depending on the refresh rate.
   double fastActingInsulin = 0;
   double basalInsulin = 0;
+
 
   // STATE BOOLEANS ---------------
   bool inDrawer = false; // Boolean to indicate if the app's Drawer is open or not.
@@ -345,11 +348,20 @@ class _HomeScreenState extends State<HomeScreen> {
     double lastBasalInsulin = 0;
     int dateDiff = 0;
     if (updateInBlood != null){
+      print("last inblood Was not null!");
       lastFastInsulin = updateInBlood.fastinsulin_dose;
-      lastBasalInsulin = updateInBlood.fastinsulin_dose;
+      print("Last Fast Insulin = ${lastFastInsulin}");
+      lastBasalInsulin = updateInBlood.basalinsulin_dose;
+      print("Last Basal Insulin = ${lastBasalInsulin}");
       dateDiff = DateTime.now().difference(updateInBlood.dateTime!).inSeconds;
+      print("Date diff = ${dateDiff}");
       lastFastInsulin -= lastFastStep * dateDiff;
+      lastFastInsulin = lastFastInsulin < 0 ? 0 : lastFastInsulin;
+      print("FINAL VALUE LAST FAST INSULIN = ${lastFastInsulin}");
       lastBasalInsulin -= lastBasalStep * dateDiff;
+      lastBasalInsulin = lastBasalInsulin < 0 ? 0 : lastBasalInsulin;
+      print("FINAL VALUE LAST BASAL INSULIN = ${lastBasalInsulin}");
+      insulinBox.put("inBlood", InsulinLog(lastFastInsulin,lastBasalInsulin,2,DateTime.now()));
     }
 
 
@@ -397,37 +409,45 @@ class _HomeScreenState extends State<HomeScreen> {
       inBloodLog.basalinsulin_dose = basalInsulin;
       insulinBox.put("inBlood",inBloodLog);
       print("inBlood Log has been put inside the box / updated: ${inBloodLog}");
-      setState(() {
-        print("Current maxFast = ${maxFast}");
-        if (fastActingInsulin < fastStep){
-          if (fastActingInsulin < 0.009){
-            Liquid1_level?.change(0);
+      if (mounted){
+        /// The mounted property indicates whether or not the current widget is still in the Widget Tree.
+        /// Calling setState with mounted being false results in an error!
+        setState(() {
+          print("Current maxFast = ${maxFast}");
+          if (fastActingInsulin < fastStep){
+            if (fastActingInsulin < 0.009){
+              Liquid1_level?.change(0);
+            }
+            else {
+              fastStep = fastStep / 2;
+              fastActingInsulin -= fastStep;
+              Liquid1_level?.change(123 * fastActingInsulin / maxFast);
+            }
           }
           else {
-            fastStep = fastStep / 2;
-            fastActingInsulin -= fastStep;
-            Liquid1_level?.change(123 * fastActingInsulin / maxFast);
+            Liquid1_level?.change( 123 * fastActingInsulin / maxFast);
           }
-        }
-        else {
-          Liquid1_level?.change( 123 * fastActingInsulin / maxFast);
-        }
-        print("Fast acting Liquid1 level changed!");
-        if (basalInsulin < basalStep){
-          if (basalInsulin < 0.009){
-            Liquid2_level?.change(0);
+          print("Fast acting Liquid1 level changed!");
+          if (basalInsulin < basalStep){
+            if (basalInsulin < 0.009){
+              Liquid2_level?.change(0);
+            }
+            else {
+              basalStep = basalStep / 2;
+              basalInsulin -= basalStep;
+              Liquid2_level?.change(123 * basalInsulin / maxBasal);
+            }
           }
-          else {
-            basalStep = basalStep / 2;
-            basalInsulin -= basalStep;
+          else{
             Liquid2_level?.change(123 * basalInsulin / maxBasal);
           }
-        }
-        else{
-          Liquid2_level?.change(123 * basalInsulin / maxBasal);
-        }
-        print("Basal Liquid2 level changed!");
-      });
+          print("Basal Liquid2 level changed!");
+        });
+      }
+      else {
+        // No reason to keep the Timer going if the widget is no longer in the Widget Tree.
+        t.cancel();
+      }
     });
   }
 
@@ -811,6 +831,38 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 60,
                           height: 390,
+                          color: Color(0xE70000),
+                        ),
+                      ),
+                    ),
+                  if (inDrawer)
+                    Positioned(
+                      top: 310,
+                      left: 0,
+                      child: GestureDetector(
+                        onTap: (){
+                          print("USER LOGGING OUT...");
+                          AuthService _a = AuthService();
+                          _a.signOut();
+                          Future.delayed(Duration(milliseconds: 500),(){
+                            Navigator.pushReplacementNamed(context, get_started.Get_Started.id);
+                            print("Pushed on the stack!");
+                          });
+                          setState(() {
+                            inInsulinLog = false;
+                            inDrawer = false;
+                            inHome = false;
+                            inGlucoseLog = false;
+                            inMainButton = false;
+                            print("The current state is:\ninHome = ${inHome} | inDrawer = ${inDrawer} "
+                                "| inGlucoseLog = ${inGlucoseLog} | inMainButton = ${inMainButton}"
+                                " | inInsulinLog = ${inInsulinLog}\nState"
+                                " variables changing soon due to transition time: NONE");
+                          });
+                        },
+                        child: Container(
+                          width: 230,
+                          height: 50,
                           color: Color(0xE70000),
                         ),
                       ),

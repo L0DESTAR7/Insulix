@@ -1,24 +1,39 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:hive/hive.dart';
-import 'package:insulix/glucose_data.dart';
-import 'package:insulix/glucose_log.dart';
-import 'package:insulix/insulin_log.dart';
+import 'package:insulix/models/glucose_data.dart';
+import 'package:insulix/models/glucose_log.dart';
+import 'package:insulix/models/insulin_log.dart';
 import "package:rive/rive.dart";
 import "dart:async";
 import "package:flutter/services.dart";
 import 'get_started.dart' as get_started;
-import 'form.dart' as form;
+import '../models/form.dart' as form;
 import 'home.dart' as home;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:insulix/firebase_options.dart';
+bool signedIn = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Hive.initFlutter("./Data");
   Hive.registerAdapter(GlucoseLogAdapter());
   Hive.registerAdapter(InsulinLogAdapter());
   await Hive.openBox<GlucoseLog>("GlucoseLogs");
   await Hive.openBox<InsulinLog>("InsulinLogs");
+  var _user = FirebaseAuth.instance;
+  if (_user.currentUser != null){
+    signedIn = true;
+    print("user signed in!");
+  }
+  else{
+    signedIn = false;
+  }
   runApp(const Mainscreen());
 }
 
@@ -40,7 +55,6 @@ class _MainscreenState extends State<Mainscreen> {
         Mainscreen.id : (context) => Home(),
         get_started.Get_Started.id : (context) => const get_started.Get_Started(),
         home.HomeScreen.id : (context) => const home.HomeScreen()
-
       }
     );
   }
@@ -147,7 +161,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           // The <if not pushed> condition was added because for some reason, flutter pushes 3 times on the stack?? Perhaps it checks too fast...
           if (!pushed) {
             print("I pushed on the page stack");
-            Navigator.pushNamed(context, get_started.Get_Started.id);
+            signedIn ? Navigator.pushNamed(context, home.HomeScreen.id) : Navigator.pushNamed(context, get_started.Get_Started.id);
             pushed = true;
           }
         });

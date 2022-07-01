@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:insulix/models/insulixUser.dart';
+import 'package:insulix/services/auth_service.dart';
 import 'package:rive/rive.dart';
 import 'package:flutter/material.dart';
 import "package:flutter/services.dart";
-import 'form.dart' as form;
+import '../models/form.dart' as form;
 import 'home.dart' as home;
 
 
@@ -34,6 +36,7 @@ class _Get_StartedState extends State<Get_Started> {
   RiveAnimationController? _rivecontroller;
   final mail_controller = TextEditingController();
   final password_controller = TextEditingController();
+  AuthService _auth = AuthService();
 
 
   // TRIGGERS ----------------------
@@ -74,6 +77,7 @@ class _Get_StartedState extends State<Get_Started> {
   SMIBool? is5;
   SMIBool? correct_mail;
   SMIBool? correct_pass;
+  SMIBool? check_login;
   //--------------------------------
 
   @override
@@ -111,6 +115,7 @@ class _Get_StartedState extends State<Get_Started> {
       correct_mail = controller.findInput<bool>('correct_mail') as SMIBool;
       correct_pass = controller.findInput<bool>('correct_pass') as SMIBool;
       go_next = controller.findInput<bool>('go_next') as SMITrigger;
+      check_login = controller.findInput<bool>('check_login') as SMIBool;
       setState(() {
         _riveArtboard = artboard;
       });
@@ -444,23 +449,40 @@ class _Get_StartedState extends State<Get_Started> {
                 top: 700,
                 left: 150,
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () async {
                     print("taped log in button!");
-                    String? mailInput = mail_controller.text;
-                    String? passwordInput = password_controller.text;
-                    if (mailInput == "a" && passwordInput == "a"){
-                      correct_mail?.value = true;
-                      correct_pass?.value = true;
-                      LogIn?.fire();
-                      display_login_buttons = false;
-                      push_next = true;
-                    }
-                    else{
-                      correct_mail?.value = false;
-                      correct_pass?.value = false;
-                      LogIn?.fire();
-                    }
-                    setState(() {
+                    String? mailInput = mail_controller.text.trim();
+                    String? passwordInput = password_controller.text.trim();
+                    LogIn?.fire();
+                    check_login?.value = false;
+                    // TODO: IMPLEMENT FIREBASE LOGIN
+                    print(mailInput);
+                    print(passwordInput);
+                    InsulixUser? insulixUser = await _auth.signInWithEmailAndPassword(mailInput, passwordInput);
+                    Future.delayed(Duration(milliseconds: 1500),(){
+                      check_login?.value = true;
+                      if (insulixUser == null){
+                        correct_mail?.value = false;
+                        correct_pass?.value = false;
+                        print(insulixUser);
+                        print("CHECKING LOGIN ? ${check_login?.value}");
+                        setState(() {
+
+                        });
+                      }
+                      else {
+                        print("insulixUser not null!");
+                        correct_mail?.value = true;
+                        correct_pass?.value = true;
+                        push_next = true;
+                        print("PUSHING NEXT ? ${push_next}");
+                        display_login_buttons = false;
+                        print(insulixUser);
+                        print("CHECKING LOGIN ? ${check_login?.value}");
+                        setState(() {
+
+                        });
+                      }
                     });
                   },
                   child: Container(

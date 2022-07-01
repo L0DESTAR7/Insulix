@@ -38,6 +38,8 @@ dependencies:
   flutter_alarm_clock: ^0.0.2
   android_alarm_manager_plus: ^2.0.5
   android_intent_plus: ^3.1.1
+  firebase_core: ^1.18.0
+  firebase_auth: ^3.3.20
 
 dev_dependencies:
   flutter_test:

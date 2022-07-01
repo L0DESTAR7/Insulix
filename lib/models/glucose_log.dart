@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'glucose_log.g.dart';
+part '../model adapters/glucose_log.g.dart';
 
 @HiveType(typeId: 1)
 class GlucoseLog{

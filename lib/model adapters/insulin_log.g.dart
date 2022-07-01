@@ -1,40 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'glucose_data.dart';
+part of '../models/insulin_log.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class GlucoseDataAdapter extends TypeAdapter<GlucoseData> {
+class InsulinLogAdapter extends TypeAdapter<InsulinLog> {
   @override
-  final int typeId = 0;
+  final int typeId = 2;
 
   @override
-  GlucoseData read(BinaryReader reader) {
+  InsulinLog read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return GlucoseData()
-      ..latestLog = fields[0] as double
-      ..Logs = (fields[1] as List).cast<double>()
-      ..BeforeAfter = (fields[2] as List).cast<int>()
-      ..LogTime = (fields[3] as List).cast<DateTime>();
+    return InsulinLog(
+      fields[0] as double,
+      fields[1] as double,
+      fields[2] as int,
+      fields[3] as DateTime,
+    );
   }
 
   @override
-  void write(BinaryWriter writer, GlucoseData obj) {
+  void write(BinaryWriter writer, InsulinLog obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.latestLog)
+      ..write(obj.fastinsulin_dose)
       ..writeByte(1)
-      ..write(obj.Logs)
+      ..write(obj.basalinsulin_dose)
       ..writeByte(2)
-      ..write(obj.BeforeAfter)
+      ..write(obj.before_after)
       ..writeByte(3)
-      ..write(obj.LogTime);
+      ..write(obj.dateTime);
   }
 
   @override
@@ -43,7 +44,7 @@ class GlucoseDataAdapter extends TypeAdapter<GlucoseData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is GlucoseDataAdapter &&
+      other is InsulinLogAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

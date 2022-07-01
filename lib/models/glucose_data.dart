@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'glucose_data.g.dart';
+part '../model adapters/glucose_data.g.dart';
 
 @HiveType(typeId: 0)
 class GlucoseData extends HiveObject {
