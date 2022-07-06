@@ -11,4 +11,12 @@ I am really proud of how this app turned out to be 🔥, however there's still s
 
 ## Screenshots 📷
 
+Get Started screen:
+
+![](PreviewImages/SCR-GetStarted.png)
+
+- Login:
+
+![](PreviewImages/SCR-Login.png)
+
 
