@@ -1,19 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:hive/hive.dart';
-import 'package:insulix/models/glucose_data.dart';
 import 'package:insulix/models/glucose_log.dart';
 import 'package:insulix/models/insulin_log.dart';
 import "package:rive/rive.dart";
 import "dart:async";
 import "package:flutter/services.dart";
 import 'get_started.dart' as get_started;
-import '../models/form.dart' as form;
 import 'home.dart' as home;
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:insulix/firebase_options.dart';
+
 bool signedIn = false;
 
 void main() async {
@@ -49,10 +47,10 @@ class _MainscreenState extends State<Mainscreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: const Home(),
       debugShowCheckedModeBanner: false,
       routes: {
-        Mainscreen.id : (context) => Home(),
+        Mainscreen.id : (context) => const Home(),
         get_started.Get_Started.id : (context) => const get_started.Get_Started(),
         home.HomeScreen.id : (context) => const home.HomeScreen()
       }
@@ -75,31 +73,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController? _controller;
   bool transition = false;
   bool pushed = false;
-  Widget item0 = Container(
-      height: 75,
-      width: 290,
-      color: Color(0xFF3E5468),
-      child: Center(child: DefaultTextStyle(child: Text("Type 1"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36)))),
-      item1 = Container(
-          height: 75,
-          width: 290,
-          color: Color(0xFF3E5468),
-          child: Center(child: DefaultTextStyle(child: Text("Type 2"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36)))),
-      item2 = Container(
-          height: 75,
-          width: 290,
-          color: Color(0xFF3E5468),
-          child: Center(child: DefaultTextStyle(child: Text("Gestational"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36)))),
-      item3 = Container(
-          height: 75,
-          width: 290,
-          color: Color(0xFF3E5468),
-          child: Center(child: DefaultTextStyle(child: Text("MODY"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36)))),
-      item4 = Container(
-          height: 75,
-          width: 290,
-          color: Color(0xFF3E5468),
-          child: Center(child: DefaultTextStyle(child: Text("LADA"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
   @override
   void _onRiveInit(Artboard artboard) {
     final controller =
@@ -133,7 +106,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       value: 0,
       lowerBound: 0,
       upperBound: 110,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
     _controller!.forward();
 
@@ -143,21 +116,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
 
-    Timer.periodic(Duration(milliseconds: 1), (Timer t) {
+    Timer.periodic(const Duration(milliseconds: 1), (Timer t) {
       load_prog!.change(_controller!.value);
       if (_controller!.isCompleted){
         t.cancel();
-        Future.delayed(Duration(seconds: 5),(){
+        Future.delayed(const Duration(seconds: 5),(){
           go_next?.fire();
           transition = true;
         });
       }
     });
 
-    Timer.periodic(Duration(seconds: 6), (Timer t) {
+    Timer.periodic(const Duration(seconds: 6), (Timer t) {
       if (transition){
         t.cancel();
-        Future.delayed(Duration(milliseconds: 1500),(){
+        Future.delayed(const Duration(milliseconds: 1500),(){
           // The <if not pushed> condition was added because for some reason, flutter pushes 3 times on the stack?? Perhaps it checks too fast...
           if (!pushed) {
             print("I pushed on the page stack");
@@ -171,10 +144,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     double width = MediaQuery.of(context).size.width;
 
 
-    List<Widget> ScrollList = [item0,item1,item2,item3,item4];
-
     double height = MediaQuery.of(context).size.height;
-    final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     return Stack(children: [
         Positioned(
@@ -187,170 +157,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           width: width,
           height: height,
         ),
-        //Center(
-        //  child: ListWheelScrollView.useDelegate(itemExtent: 75,
-        //    onSelectedItemChanged: (int i){
-        //        if (i==0){
-        //          item0 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 1"),style: TextStyle(color: Color(
-        //                  0xFF00C2FF),fontSize: 36))));
-        //          item1 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 2"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item2 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Gestational"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item3 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("MODY"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item4 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("LADA"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //        }
-        //        else if (i==1){
-        //          item0 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 1"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item1 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 2"),style: TextStyle(color: Color(
-        //                  0xFF00C2FF),fontSize: 36))));
-        //          item2 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Gestational"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item3 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("MODY"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item4 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("LADA"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //        }
-        //        else if(i==2){
-        //          item0 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 1"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item1 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 2"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item2 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Gestational"),style: TextStyle(color: Color(
-        //                  0xFF00C2FF),fontSize: 36))));
-        //          item3 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("MODY"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item4 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("LADA"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //        }
-        //        else if (i==3){
-        //          item0 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 1"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item1 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 2"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item2 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Gestational"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item3 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("MODY"),style: TextStyle(color: Color(
-        //                  0xFF00C2FF),fontSize: 36))));
-        //          item4 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("LADA"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //        }
-        //        else if(i==4){
-        //          item0 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 1"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item1 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Type 2"),style: TextStyle(color: Color(
-        //                  0xFFFFFFFF),fontSize: 36))));
-        //          item2 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("Gestational"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item3 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("MODY"),style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 36))));
-        //          item4 = Container(
-        //              height: 75,
-        //              width: 290,
-        //              color: Color(0xFF3E5468),
-        //              child: Center(child: DefaultTextStyle(child: Text("LADA"),style: TextStyle(color: Color(
-        //                  0xFF00C2FF),fontSize: 36))));
-        //        }
-        //        setState(() {
-        //        });
-        //    },
-        //    diameterRatio: 1,
-        //    magnification: 1,
-        //    useMagnifier: true,
-        //    overAndUnderCenterOpacity: 0.6,
-        //    perspective: 0.001,
-        //    childDelegate: ListWheelChildLoopingListDelegate(
-        //      children: ScrollList,
-        //    ),
-        //  ),
-        //),
       ]);
   }
 }

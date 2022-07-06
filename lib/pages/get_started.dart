@@ -36,7 +36,7 @@ class _Get_StartedState extends State<Get_Started> {
   RiveAnimationController? _rivecontroller;
   final mail_controller = TextEditingController();
   final password_controller = TextEditingController();
-  AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
 
 
   // TRIGGERS ----------------------
@@ -131,7 +131,7 @@ class _Get_StartedState extends State<Get_Started> {
       final artboard = file.mainArtboard;
       setState(() => _riveArtboard = artboard);
     });
-    Future.delayed(Duration(seconds: 11),(){
+    Future.delayed(const Duration(seconds: 11),(){
       form_loaded = true;
       print("Form loaded!");
       setState(() {
@@ -152,7 +152,7 @@ class _Get_StartedState extends State<Get_Started> {
     double height = MediaQuery.of(context).size.height;
     print("${form_start} | ${userForm?.currentPage}");
     if (userForm?.currentPage == 3 && !display_choice_Page3){
-      Future.delayed(Duration(seconds: 2),(){
+      Future.delayed(const Duration(seconds: 2),(){
         display_choice_Page3 = true;
         print("Displaying choice at Page3");
         setState(() {
@@ -161,7 +161,7 @@ class _Get_StartedState extends State<Get_Started> {
       });
     }
     if (userForm?.currentPage == 4 && !display_choice_Page4){
-      Future.delayed(Duration(seconds: 2),(){
+      Future.delayed(const Duration(seconds: 2),(){
         display_choice_Page4 = true;
         print("Displaying choice at Page4");
         setState(() {
@@ -170,7 +170,7 @@ class _Get_StartedState extends State<Get_Started> {
       });
     }
     if (userForm?.currentPage == 5 && !display_choice_Page5){
-      Future.delayed(Duration(seconds: 2),(){
+      Future.delayed(const Duration(seconds: 2),(){
         display_choice_Page5 = true;
         print("Displaying choice at Page5");
         setState(() {
@@ -179,7 +179,7 @@ class _Get_StartedState extends State<Get_Started> {
       });
     }
     if (userForm?.currentPage == 6 && !display_choice_Page6){
-      Future.delayed(Duration(seconds: 2),(){
+      Future.delayed(const Duration(seconds: 2),(){
         display_choice_Page6 = true;
         print("Displaying choice at Page6");
         setState(() {
@@ -188,7 +188,7 @@ class _Get_StartedState extends State<Get_Started> {
       });
     }
     if (userForm?.currentPage == 7 && !display_choice_Page7){
-      Future.delayed(Duration(seconds: 4),(){
+      Future.delayed(const Duration(seconds: 4),(){
         display_choice_Page7 = true;
         print("Displaying choice at Page7");
         setState(() {
@@ -197,7 +197,7 @@ class _Get_StartedState extends State<Get_Started> {
       });
     }
     if (form_start == false && inLogin && checkLogin){
-          Future.delayed(Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 3), () {
             display_login_buttons = true;
             checkLogin = false;
             print("User entered Login Page");
@@ -208,7 +208,7 @@ class _Get_StartedState extends State<Get_Started> {
     }
     if (push_next){
       push_next = false;
-      Future.delayed(Duration(seconds: 3),(){
+      Future.delayed(const Duration(seconds: 3),(){
         Navigator.pushReplacementNamed(context, home.HomeScreen.id);
         print("Pushed on the stack!");
       });
@@ -222,7 +222,7 @@ class _Get_StartedState extends State<Get_Started> {
             Container(
               width: width,
               height: height,
-              color: Color(0xFF3E5468),
+              color: const Color(0xFF3E5468),
             ),
             Positioned(
               child: RiveAnimation.asset(
@@ -257,7 +257,7 @@ class _Get_StartedState extends State<Get_Started> {
                 child: Container(
                   width: 140,
                   height: 42,
-                  color: Color(0xFFFFFF),
+                  color: const Color(0xFFFFFF),
                 ),
               ),
             ),
@@ -284,7 +284,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 175,
                       height: 175,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -308,7 +308,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 175,
                       height: 175,
-                      color: Color(0xFFFFB2),
+                      color: const Color(0xFFFFB2),
                     ),
                   ),
                 ),
@@ -328,7 +328,7 @@ class _Get_StartedState extends State<Get_Started> {
                     go_toform?.fire();
                     setState(() {
                       form_start = true;
-                      Future.delayed(Duration(seconds: 3),(){
+                      Future.delayed(const Duration(seconds: 3),(){
                           setState(() {
                             userForm?.currentPage++;
                           });
@@ -338,7 +338,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                     height: 77,
                     width: 265,
-                    color: Color(0xFFFFB2),
+                    color: const Color(0xFFFFB2),
                   ),
                 ),
               ),
@@ -359,7 +359,7 @@ class _Get_StartedState extends State<Get_Started> {
                 child: Container(
                   height: 77,
                   width: 265,
-                  color: Color(0xFFFFB2),
+                  color: const Color(0xFFFFB2),
                 ),
               ),
             ),
@@ -370,7 +370,7 @@ class _Get_StartedState extends State<Get_Started> {
                 child: GestureDetector(
                   onTap: (){
                     print("taped back button!");
-                    Future.delayed(Duration(seconds: 2),(){
+                    Future.delayed(const Duration(seconds: 2),(){
                       display_start_buttons = true;
                       inLogin = false;
                       setState(() {
@@ -386,7 +386,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       height: 65,
                       width: 65,
-                      color: Color(0xFFFFB2),
+                      color: const Color(0xFFFFB2),
                     ),
                   ),
                 ),
@@ -399,18 +399,18 @@ class _Get_StartedState extends State<Get_Started> {
                   width: 190,
                   child: Card(
                     semanticContainer: false,
-                    color: Color(0xFFF),
+                    color: const Color(0xFFF),
                     elevation: 0,
                     child: TextFormField(
                       controller: mail_controller,
                       autofocus: true,
                       maxLines: 1,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xE0FFFFFF),
                         fontSize: 18,
                         fontFamily: 'Lexend'
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                       ),
                     ),
@@ -425,19 +425,19 @@ class _Get_StartedState extends State<Get_Started> {
                   width: 190,
                   child: Card(
                     semanticContainer: false,
-                    color: Color(0xFFF),
+                    color: const Color(0xFFF),
                     elevation: 0,
                     child: TextFormField(
                       controller: password_controller,
                       obscureText: true,
                       autofocus: true,
                       maxLines: 1,
-                      style: TextStyle(
-                          color: Color(0xE0FFFFFF),
+                      style: const TextStyle(
+                          color: const Color(0xE0FFFFFF),
                           fontSize: 18,
                           fontFamily: 'Lexend'
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                       ),
                     ),
@@ -459,7 +459,7 @@ class _Get_StartedState extends State<Get_Started> {
                     print(mailInput);
                     print(passwordInput);
                     InsulixUser? insulixUser = await _auth.signInWithEmailAndPassword(mailInput, passwordInput);
-                    Future.delayed(Duration(milliseconds: 1500),(){
+                    Future.delayed(const Duration(milliseconds: 1500),(){
                       check_login?.value = true;
                       if (insulixUser == null){
                         correct_mail?.value = false;
@@ -488,7 +488,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                     height: 65,
                     width: 130,
-                    color: Color(0xFFF),
+                    color: const Color(0xFFF),
                   ),
                 ),
               ),
@@ -512,7 +512,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                     width: 175,
                     height: 175,
-                    color: Color(0xCBC2C2),
+                    color: const Color(0xCBC2C2),
                   ),
                 ),
               ),
@@ -536,7 +536,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                     width: 175,
                     height: 175,
-                    color: Color(0xFFFFB2),
+                    color: const Color(0xFFFFB2),
                   ),
                 ),
               ),
@@ -560,7 +560,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 175,
                       height: 175,
-                      color: Color(0xCBC2C2),
+                      color: const Color(0xCBC2C2),
                     ),
                   ),
                 ),
@@ -584,7 +584,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 175,
                       height: 175,
-                      color: Color(0xFFFFB2),
+                      color: const Color(0xFFFFB2),
                     ),
                   ),
                 ),
@@ -616,7 +616,7 @@ class _Get_StartedState extends State<Get_Started> {
                       child: Container(
                         width: 70,
                         height: 70,
-                        color: Color(0xFFFFFF),
+                        color: const Color(0xFFFFFF),
                       ),
                     ),
                 ),
@@ -646,7 +646,7 @@ class _Get_StartedState extends State<Get_Started> {
                       child: Container(
                         width: 70,
                         height: 70,
-                        color: Color(0xFFFFFF),
+                        color: const Color(0xFFFFFF),
                       ),
                     ),
                   ),
@@ -676,7 +676,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 70,
                       height: 70,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -706,7 +706,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 70,
                       height: 70,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -736,7 +736,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 70,
                       height: 70,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -758,7 +758,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 150,
                       height: 150,
-                      color: Color(0xFFFFB2),
+                      color: const Color(0xFFFFB2),
                     ),
                   ),
                 ),
@@ -780,7 +780,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 150,
                       height: 150,
-                      color: Color(0xFFFFB2),
+                      color: const Color(0xFFFFB2),
                     ),
                   ),
                 ),
@@ -804,7 +804,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 150,
                       height: 150,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -828,7 +828,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 150,
                       height: 150,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -848,7 +848,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                       width: 342,
                       height: 50,
-                      color: Color(0xFFFFFF),
+                      color: const Color(0xFFFFFF),
                     ),
                   ),
                 ),
@@ -868,7 +868,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                     width: 342,
                     height: 50,
-                    color: Color(0xFFFFFF),
+                    color: const Color(0xFFFFFF),
                   ),
                 ),
               ),
@@ -887,7 +887,7 @@ class _Get_StartedState extends State<Get_Started> {
                   child: Container(
                     width: 342,
                     height: 50,
-                    color: Color(0xFFFFFF),
+                    color: const Color(0xFFFFFF),
                   ),
                 ),
               ),
@@ -907,7 +907,7 @@ class _Get_StartedState extends State<Get_Started> {
                     child: Container(
                       width: 100,
                       height: 100,
-                      color: Color(0x5E1616),
+                      color: const Color(0x5E1616),
                     ),
                   ),
                 ),

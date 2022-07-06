@@ -7,9 +7,7 @@ import 'package:insulix/models/glucose_log.dart';
 import 'package:insulix/models/insulin_log.dart';
 import 'package:insulix/models/reminder_log.dart';
 import 'package:rive/rive.dart';
-import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import '../models/Boxes.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import '../models/alarmCall.dart';
 import '../services/auth_service.dart';
 import 'get_started.dart' as get_started;
@@ -48,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool haschoosen_TimeGlucose = false;
   bool haschoosen_TimeInsulin = false;
   bool haschoosen_TimeReminder = false;
-  final mySystemTheme = SystemUiOverlayStyle.dark.copyWith(systemNavigationBarColor: Color(
+  final mySystemTheme = SystemUiOverlayStyle.dark.copyWith(systemNavigationBarColor: const Color(
       0x1A000000));
 
   GlucoseLog currentGlucoseLog = GlucoseLog(0,0,DateTime.now());
@@ -250,16 +248,16 @@ class _HomeScreenState extends State<HomeScreen> {
   // METHODS ----------------------
   Future<TimeOfDay?> pickTime() => showTimePicker(
     context: context,
-    initialTime: TimeOfDay(hour: 0, minute: 0),
+    initialTime: const TimeOfDay(hour: 0, minute: 0),
     builder: (context, child) {
       return Theme(
         data: ThemeData.dark().copyWith(
-          colorScheme: ColorScheme.dark(
+          colorScheme: const ColorScheme.dark(
             surface: Color(0xFF161822),
             primary: Color(0xFF00FFA3),
             onSurface: Color(0x78FFFFFF),
           ),
-          buttonTheme: ButtonThemeData(
+          buttonTheme: const ButtonThemeData(
             colorScheme: ColorScheme.dark(
               primary: Color(0x78FFFFFF),
             )
@@ -270,18 +268,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   );
 
-  String computeAVG(List<GlucoseLog> logs){
+  int computeAVG(List<GlucoseLog> logs){
     double sum = 0;
     int n = logs.length;
-    logs.forEach((element) {
-      print("one of them:${element.log}");
-      sum += element.log;
-    });
-    try {
-      return (sum / n).toInt().toString();
-    }catch(e){
-      return "0";
+    if (n == 0){
+      return 0;
     }
+    print("Glucose logs = [");
+    for (var element in logs) {
+      print("${element.log}");
+      sum += element.log;
+    }
+    print("]");
+    return (sum ~/ n);
   }
 
   GlucoseLog getLastGlucoseLog(){
@@ -367,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-    Timer.periodic(Duration(seconds: 2),(Timer t){
+    Timer.periodic(const Duration(seconds: 2),(Timer t){
       var inBloodLog = insulinBox.get("inBlood");
       if (inBloodLog == null){
         insulinBox.put("inBlood", InsulinLog(0,0,2,DateTime.now()));
@@ -485,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                   width: width,
                   height: height,
-                  color: Color(0xFFFF),
+                  color: const Color(0xFFFF),
                 ),
                   Positioned(
                     width: width,
@@ -504,15 +503,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       top: height*0.232,
                       left: width*0.40,
                       child: Text(
-                        computeAVG(Boxes.getGlucoseLogs().values.toList().cast<GlucoseLog>()),
+                        computeAVG(Boxes.getGlucoseLogs().values.toList().cast<GlucoseLog>()).toString(),
                         style: TextStyle(
-                          color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                          color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                           fontFamily: "Lexend",
                           fontSize: 22,
                           shadows: [Shadow(
-                            offset: Offset(0,0),
+                            offset: const Offset(0,0),
                             blurRadius: 20,
-                            color: inHome ? Color(0xFF0FFFA3) : Color(0x240FFFA3),
+                            color: inHome ? const Color(0xFF0FFFA3) : const Color(0x240FFFA3),
                           )]
                         ),
                       )
@@ -523,13 +522,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "mg/dl",
                         style: TextStyle(
-                            color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                            color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                             fontFamily: "Lexend",
                             fontSize: 16,
                           shadows: [Shadow(
-                            offset: Offset(0,0),
+                            offset: const Offset(0,0),
                             blurRadius: 20,
-                            color: inHome ? Color(0xFF0FFFA3) : Color(0x240FFFA3),
+                            color: inHome ? const Color(0xFF0FFFA3) : const Color(0x240FFFA3),
                           )]
                         ),
                       )
@@ -543,13 +542,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           getLastGlucoseLog().log.toInt().toString(),
                           style: TextStyle(
-                              color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                              color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                               fontFamily: "Lexend",
                               fontSize:22,
                               shadows: [Shadow(
-                                offset: Offset(0,0),
+                                offset: const Offset(0,0),
                                 blurRadius: 20,
-                                color: inHome ? Color(0xFF0FFFA3) : Color(0x240FFFA3),
+                                color: inHome ? const Color(0xFF0FFFA3) : const Color(0x240FFFA3),
                               )]
                           ),
                         )
@@ -560,13 +559,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "mg/dl",
                         style: TextStyle(
-                            color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                            color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                             fontFamily: "Lexend",
                             fontSize: 16,
                             shadows: [Shadow(
-                              offset: Offset(0,0),
+                              offset: const Offset(0,0),
                               blurRadius: 20,
-                              color: inHome ? Color(0xFF0FFFA3) : Color(0x240FFFA3),
+                              color: inHome ? const Color(0xFF0FFFA3) : const Color(0x240FFFA3),
                             )]
                         ),
                       )
@@ -577,13 +576,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         fastActingInsulin.toStringAsFixed(2),
                         style: TextStyle(
-                            color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                            color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                             fontFamily: "Lexend",
                             fontSize: 28,
                             shadows: [Shadow(
-                              offset: Offset(3,3),
+                              offset: const Offset(3,3),
                               blurRadius: 15,
-                              color: inHome ? Color(0xAD0FFFA3) : Color(0x240FFFA3),
+                              color: inHome ? const Color(0xAD0FFFA3) : const Color(0x240FFFA3),
                             )]
                         ),
                       )
@@ -594,14 +593,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "remaining",
                         style: TextStyle(
-                            color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                            color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                             fontFamily: "Lexend",
                             fontSize: 18,
                             letterSpacing: -1,
                             shadows: [Shadow(
-                              offset: Offset(3,3),
+                              offset: const Offset(3,3),
                               blurRadius: 15,
-                              color: inHome ? Color(0xAD0FFFA3) : Color(0x240FFFA3),
+                              color: inHome ? const Color(0xAD0FFFA3) : const Color(0x240FFFA3),
                             )]
                         ),
                       )
@@ -612,13 +611,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         basalInsulin.toStringAsFixed(2),
                         style: TextStyle(
-                            color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                            color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                             fontFamily: "Lexend",
                             fontSize: 28,
                             shadows: [Shadow(
-                              offset: Offset(3,3),
+                              offset: const Offset(3,3),
                               blurRadius: 15,
-                              color: inHome ? Color(0xAD0FFFA3) : Color(0x240FFFA3),
+                              color: inHome ? const Color(0xAD0FFFA3) : const Color(0x240FFFA3),
                             )]
                         ),
                       )
@@ -629,14 +628,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "remaining",
                         style: TextStyle(
-                            color: inHome ? Color(0xFF00FFA3) : Color(0x8C00FFA3),
+                            color: inHome ? const Color(0xFF00FFA3) : const Color(0x8C00FFA3),
                             fontFamily: "Lexend",
                             fontSize: 18,
                             letterSpacing: -1,
                             shadows: [Shadow(
-                              offset: Offset(3,3),
+                              offset: const Offset(3,3),
                               blurRadius: 15,
-                              color: inHome ? Color(0xAD0FFFA3) : Color(0x240FFFA3),
+                              color: inHome ? const Color(0xAD0FFFA3) : const Color(0x240FFFA3),
                             )]
                         ),
                       )
@@ -647,14 +646,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         maxFast.toStringAsFixed(2),
                         style: TextStyle(
-                            color: inHome ? Color(0xFFFFFFFF) : Color(0x8CFFFFFF),
+                            color: inHome ? const Color(0xFFFFFFFF) : const Color(0x8CFFFFFF),
                             fontFamily: "Lexend",
                             fontSize: 24,
                             letterSpacing: -2,
                             shadows: [Shadow(
-                              offset: Offset(0,0),
+                              offset: const Offset(0,0),
                               blurRadius: 20,
-                              color: inHome ? Color(0xFFFFFFFF) : Color(0x24FFFFFF),
+                              color: inHome ? const Color(0xFFFFFFFF) : const Color(0x24FFFFFF),
                             )]
                         ),
                       )
@@ -665,14 +664,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "units",
                         style: TextStyle(
-                            color: inHome ? Color(0xFFFFFFFF) : Color(0x8CFFFFFF),
+                            color: inHome ? const Color(0xFFFFFFFF) : const Color(0x8CFFFFFF),
                             fontFamily: "Lexend",
                             fontSize: 22,
                             letterSpacing: -3,
                             shadows: [Shadow(
-                              offset: Offset(3,3),
+                              offset: const Offset(3,3),
                               blurRadius: 15,
-                              color: inHome ? Color(0xADFFFFFF) : Color(0x24FFFFFF),
+                              color: inHome ? const Color(0xADFFFFFF) : const Color(0x24FFFFFF),
                             )]
                         ),
                       )
@@ -683,14 +682,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         maxBasal.toStringAsFixed(2),
                         style: TextStyle(
-                            color: inHome ? Color(0xFFFFFFFF) : Color(0x8CFFFFFF),
+                            color: inHome ? const Color(0xFFFFFFFF) : const Color(0x8CFFFFFF),
                             fontFamily: "Lexend",
                             fontSize: 24,
                             letterSpacing: -2,
                             shadows: [Shadow(
-                              offset: Offset(0,0),
+                              offset: const Offset(0,0),
                               blurRadius: 20,
-                              color: inHome ? Color(0xFFFFFFFF) : Color(0x24FFFFFF),
+                              color: inHome ? const Color(0xFFFFFFFF) : const Color(0x24FFFFFF),
                             )]
                         ),
                       )
@@ -701,14 +700,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "units",
                         style: TextStyle(
-                            color: inHome ? Color(0xFFFFFFFF) : Color(0x8CFFFFFF),
+                            color: inHome ? const Color(0xFFFFFFFF) : const Color(0x8CFFFFFF),
                             fontFamily: "Lexend",
                             fontSize: 22,
                             letterSpacing: -3,
                             shadows: [Shadow(
-                              offset: Offset(3,3),
+                              offset: const Offset(3,3),
                               blurRadius: 15,
-                              color: inHome ? Color(0xADFFFFFF) : Color(0x24FFFFFF),
+                              color: inHome ? const Color(0xADFFFFFF) : const Color(0x24FFFFFF),
                             )]
                         ),
                       )
@@ -801,7 +800,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             width: 55,
                             height: 55,
-                            color: Color(0xE70000),
+                            color: const Color(0xE70000),
                           ),
                       ),
                     ),
@@ -831,7 +830,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 60,
                           height: 390,
-                          color: Color(0xE70000),
+                          color: const Color(0xE70000),
                         ),
                       ),
                     ),
@@ -844,7 +843,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           print("USER LOGGING OUT...");
                           AuthService _a = AuthService();
                           _a.signOut();
-                          Future.delayed(Duration(milliseconds: 500),(){
+                          Future.delayed(const Duration(milliseconds: 500),(){
                             Navigator.pushReplacementNamed(context, get_started.Get_Started.id);
                             print("Pushed on the stack!");
                           });
@@ -863,7 +862,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 230,
                           height: 50,
-                          color: Color(0xE70000),
+                          color: const Color(0xE70000),
                         ),
                       ),
                     ),
@@ -886,7 +885,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 " | inInsulinLog = ${inInsulinLog}\nState"
                                 " variables changing soon due to transition time: inHome | inMainButton");
                           });
-                          Future.delayed(Duration(milliseconds: 100),(){
+                          Future.delayed(const Duration(milliseconds: 100),(){
                             setState(() {
                               inHome = false;
                               print("The current state is:\ninHome = ${inHome} | inDrawer = ${inDrawer} "
@@ -895,7 +894,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   " variables changing soon due to transition time: inMainButton");
                             });
                           });
-                          Future.delayed(Duration(milliseconds: 2500),(){
+                          Future.delayed(const Duration(milliseconds: 2500),(){
                             setState(() {
                               inMainButton = true;
                               print("The current state is:\ninHome = ${inHome} | inDrawer = ${inDrawer} "
@@ -908,7 +907,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             width: 80,
                             height: 80,
-                            color: Color(0xFFF),
+                            color: const Color(0xFFF),
                           ),
                         ),
                       ),
@@ -930,7 +929,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 80,
                           height: 120,
-                          color: Color(0xE70000),
+                          color: const Color(0xE70000),
                         ),
                       )
                     ),
@@ -952,7 +951,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 120,
                           height: 40,
-                          color: Color(0xE70000),
+                          color: const Color(0xE70000),
                         ),
                       ),
                     ),
@@ -972,7 +971,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 110,
                           height: 40,
-                          color: Color(0xFF9E),
+                          color: const Color(0xFF9E),
                         ),
                       ),
                     ),
@@ -991,7 +990,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 110,
-                          color: Color(0xFF9E),
+                          color: const Color(0xFF9E),
                         ),
                       ),
                     ),
@@ -1013,7 +1012,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 110,
                           height: 40,
-                          color: Color(0xFF9E),
+                          color: const Color(0xFF9E),
                         ),
                       ),
                     ),
@@ -1035,7 +1034,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 110,
-                          color: Color(0xFF9E),
+                          color: const Color(0xFF9E),
                         ),
                       ),
                     ),
@@ -1058,7 +1057,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             width: 80,
                             height: 120,
-                            color: Color(0xE70000),
+                            color: const Color(0xE70000),
                           ),
                         )
                     ),
@@ -1077,7 +1076,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 120,
                           height: 40,
-                          color: Color(0xE70000),
+                          color: const Color(0xE70000),
                         ),
                       ),
                     ),
@@ -1100,7 +1099,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 " | inInsulinLog = ${inInsulinLog}\nState"
                                 " variables changing soon due to transition time: inHome | inMainButton");
                           });
-                          Future.delayed(Duration(seconds: 1),(){
+                          Future.delayed(const Duration(seconds: 1),(){
                             setState(() {
                               inHome = true;
                               inMainButton = false;
@@ -1114,7 +1113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             width: 215,
                             height: 215,
-                            color: Color(0xFFF),
+                            color: const Color(0xFFF),
                           ),
                         )
                       )
@@ -1137,7 +1136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 " | inInsulinLog = ${inInsulinLog}\nState"
                                 " variables changing soon due to transition time: inGlucoseLog");
                           });
-                          Future.delayed(Duration(seconds: 1),(){
+                          Future.delayed(const Duration(seconds: 1),(){
                             setState(() {
                               inGlucoseLog = true;
                               displayGlucoseTime = true;
@@ -1151,7 +1150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 130,
                           height: 70,
-                          color: Color(0xFFF)
+                          color: const Color(0xFFF)
                         ),
                       )
                     ),
@@ -1164,7 +1163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             button_up_right?.fire();
                             add_insulin_log?.fire();
                             setState(() {
-                              InsulinLog currentInsulinLog = InsulinLog(0,0,0,DateTime.now());
+                              currentInsulinLog = InsulinLog(0,0,0,DateTime.now());
                               inInsulinLog = false;
                               inMainButton = false;
                               haschoosen_TimeInsulin = false;
@@ -1175,7 +1174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   " | inInsulinLog = ${inInsulinLog}\nState"
                                   " variables changing soon due to transition time: inInsulinLog");
                             });
-                            Future.delayed(Duration(seconds: 1),(){
+                            Future.delayed(const Duration(seconds: 1),(){
                               setState(() {
                                 inInsulinLog = true;
                                 displayInsulinTime = true;
@@ -1188,7 +1187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 130,
                               height: 70,
-                              color: Color(0xFFF)
+                              color: const Color(0xFFF)
                           ),
                         )
                     ),
@@ -1205,7 +1204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {
 
                           });
-                          Future.delayed(Duration(seconds: 1),(){
+                          Future.delayed(const Duration(seconds: 1),(){
                             setState(() {
                               inReminderLog = true;
                               displayReminderTime = true;
@@ -1219,7 +1218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 100,
                           height: 120,
-                          color: Color(0xFF),
+                          color: const Color(0xFF),
                         ),
                       ),
                     ),
@@ -1243,7 +1242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 " | inInsulinLog = ${inInsulinLog}\nState"
                                 " variables changing soon due to transition time: inMainButton | inGlucoseLog");
                           });
-                          Future.delayed(Duration(seconds: 1),(){
+                          Future.delayed(const Duration(seconds: 1),(){
                             setState(() {
                               inGlucoseLog = false;
                               inMainButton = true;
@@ -1257,7 +1256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             width: 40,
                             height: 40,
-                            color: Color(0xFFF)
+                            color: const Color(0xFFF)
                           ),
                         ),
                       )
@@ -1277,7 +1276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 50,
-                          color: Color(0xFFF),
+                          color: const Color(0xFFF),
                         ),
                       ),
                     ),
@@ -1296,7 +1295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 50,
-                          color: Color(0xFF00DD),
+                          color: const Color(0xFF00DD),
                         ),
                       ),
                     ),
@@ -1327,7 +1326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 " variables changing soon due to transition time: inMainButton | inGlucoseLog");
                             currentGlucoseLog = GlucoseLog(0,0,DateTime.now());
                           });
-                          Future.delayed(Duration(seconds: 1),(){
+                          Future.delayed(const Duration(seconds: 1),(){
                             setState(() {
                               glucose_controller.clear();
                               displayGlucoseTime = false;
@@ -1342,7 +1341,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 100,
                           height: 35,
-                          color: Color(0xFF00DD),
+                          color: const Color(0xFF00DD),
                         ),
                       ),
                     ),
@@ -1353,13 +1352,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       left: 215,
                       child: TextField(
                         controller: glucose_controller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "--"
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF212431),
                           fontFamily: "Lexend",
                           fontSize: 14
@@ -1375,7 +1374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 40,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Color(0x78FFFFFF)),
+                            backgroundColor: MaterialStateProperty.all(const Color(0x78FFFFFF)),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)
@@ -1384,7 +1383,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Text(
                             haschoosen_TimeGlucose ? "$hoursGlucose:$minutesGlucose" : "Time",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF313546),
                             fontFamily: "Lexend",
                             fontSize: 32
@@ -1427,7 +1426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   " | inInsulinLog = ${inInsulinLog}\nState"
                                   " variables changing soon due to transition time: inMainButton |");
                             });
-                            Future.delayed(Duration(seconds: 1),(){
+                            Future.delayed(const Duration(seconds: 1),(){
                               setState(() {
                                 inMainButton = true;
                                 print("The current state is:\ninHome = ${inHome} | inDrawer = ${inDrawer} "
@@ -1440,7 +1439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                                 width: 40,
                                 height: 40,
-                                color: Color(0xFFF)
+                                color: const Color(0xFFF)
                             ),
                           ),
                         )
@@ -1461,7 +1460,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 50,
-                          color: Color(0xFF00DD),
+                          color: const Color(0xFF00DD),
                         ),
                       ),
                     ),
@@ -1481,7 +1480,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 50,
-                          color: Color(0x51FF),
+                          color: const Color(0x51FF),
                         ),
                       ),
                     ),
@@ -1492,13 +1491,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       left: 240,
                       child: TextField(
                         controller: fastacting_insulin_controller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "--"
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Color(0xFF212431),
                             fontFamily: "Lexend",
                             fontSize: 14
@@ -1512,13 +1511,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       left: 240,
                       child: TextField(
                         controller: basal_insulin_controller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "--"
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Color(0xFF212431),
                             fontFamily: "Lexend",
                             fontSize: 14
@@ -1534,7 +1533,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 40,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Color(0x78FFFFFF)),
+                              backgroundColor: MaterialStateProperty.all(const Color(0x78FFFFFF)),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)
@@ -1543,8 +1542,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Text(
                             haschoosen_TimeInsulin ? "$hoursInsulin:$minutesInsulin" : "Time",
-                            style: TextStyle(
-                                color: Color(0xFF313546),
+                            style: const TextStyle(
+                                color: const Color(0xFF313546),
                                 fontFamily: "Lexend",
                                 fontSize: 32
                             ),),
@@ -1613,7 +1612,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 " | inInsulinLog = ${inInsulinLog}\nState"
                                 " variables changing soon due to transition time: inMainButton");
                           });
-                          Future.delayed(Duration(seconds: 1),(){
+                          Future.delayed(const Duration(seconds: 1),(){
                             setState(() {
                               fastacting_insulin_controller.clear();
                               basal_insulin_controller.clear();
@@ -1629,7 +1628,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 100,
                           height: 35,
-                          color: Color(0xFF00DD),
+                          color: const Color(0xFF00DD),
                         ),
                       ),
                     ),
@@ -1649,7 +1648,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   " | inInsulinLog = ${inInsulinLog} | inReminderLog = ${inReminderLog}\nState"
                                   " variables changing soon due to transition time: inMainButton | inReminderLog");
                             });
-                            Future.delayed(Duration(seconds: 1),(){
+                            Future.delayed(const Duration(seconds: 1),(){
                               setState(() {
                                 inReminderLog = false;
                                 inMainButton = true;
@@ -1663,7 +1662,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                                 width: 40,
                                 height: 40,
-                                color: Color(0xFF)
+                                color: const Color(0xFF)
                             ),
                           ),
                         )
@@ -1683,7 +1682,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 50,
                           height: 50,
-                          color: Color(0xFF)
+                          color: const Color(0xFF)
                         ),
                       )
                     ),
@@ -1702,7 +1701,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 50,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1726,7 +1725,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 35,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1750,7 +1749,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 25,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1774,7 +1773,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 25,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1798,7 +1797,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 25,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1822,7 +1821,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 25,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1846,7 +1845,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 25,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1870,7 +1869,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                               width: 35,
                               height: 50,
-                              color: Color(0xFF)
+                              color: const Color(0xFF)
                           ),
                         )
                     ),
@@ -1882,7 +1881,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: TextField(
                           controller: reminder_comment_controller,
                           autofocus: false,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Add a comment...",
                               hintStyle: TextStyle(
@@ -1890,7 +1889,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontFamily: "Lexend"
                               )
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontFamily: "Lexend",
                               fontSize: 14
@@ -1907,7 +1906,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 40,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Color(0x78FFFFFF)),
+                              backgroundColor: MaterialStateProperty.all(const Color(0x78FFFFFF)),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)
@@ -1916,7 +1915,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Text(
                             haschoosen_TimeReminder ? "$hoursReminder:$minutesReminder" : "Time",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Color(0xFF313546),
                                 fontFamily: "Lexend",
                                 fontSize: 32
@@ -1974,7 +1973,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             currentReminderLog.dateTime.minute,currentReminderLog.days, title: currentReminderLog.comment);
                         currentReminderLog = ReminderLog([], DateTime.now(), false, "");
                         haschoosen_TimeReminder = false;
-                        Future.delayed(Duration(seconds: 1),(){
+                        Future.delayed(const Duration(seconds: 1),(){
                           setState(() {
                             reminder_comment_controller.clear();
                             inReminderLog = false;
@@ -1988,7 +1987,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         width: 102,
                         height: 35,
-                        color: Color(0xFF),
+                        color: const Color(0xFF),
                       ),
                     ),
                   ),
@@ -2006,7 +2005,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                                 width: 40,
                                 height: 40,
-                                color: Color(0xFF)
+                                color: const Color(0xFF)
                             ),
                           ),
                         )
@@ -2022,7 +2021,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: 60,
                           height: 20,
-                          color: Color(0xFF),
+                          color: const Color(0xFF),
                         ),
                       )
                     ),
@@ -2037,7 +2036,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             width: 60,
                             height: 20,
-                            color: Color(0xFFFFFF),
+                            color: const Color(0xFFFFFF),
                           ),
                         )
                     ),
@@ -2058,7 +2057,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                                 width: 40,
                                 height: 40,
-                                color: Color(0xFF)
+                                color: const Color(0xFF)
                             ),
                           ),
                         )
