@@ -7,9 +7,9 @@ import 'package:insulix/models/glucose_log.dart';
 import 'package:insulix/models/insulin_log.dart';
 import 'package:insulix/models/reminder_log.dart';
 import 'package:rive/rive.dart';
-import '../models/Boxes.dart';
-import '../models/alarmCall.dart';
-import '../services/auth_service.dart';
+import 'package:insulix/models/Boxes.dart';
+import 'package:insulix/models/alarmCall.dart';
+import 'package:insulix/services/auth_service.dart';
 import 'get_started.dart' as get_started;
 
 

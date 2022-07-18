@@ -36,9 +36,9 @@ class AuthService {
           email: email, password: password);
       User user = result.user!;
       return insulixUserFromFirebaseUser(user);
-    } catch (e){
+    } on FirebaseAuthException catch (e){
       print("REGISTRATION ERROR!");
-      print(e);
+      print(e.code);
       return null;
     }
   }
