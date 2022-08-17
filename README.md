@@ -10,7 +10,8 @@ I am really proud of how this app turned out to be 🔥, however there's some mi
 
 ## Features 🚀
 
-So far the app doesn't have all the features I envisionned it to have, but work is being made to implement those features.
+So far the app doesn't have all the features I envisionned it to have. The rest of the features are on my TODO list!
+
 Currently the app supports:
 
   * Signing in/ Signing out.
