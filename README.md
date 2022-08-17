@@ -14,7 +14,7 @@ So far the app doesn't have all the features I envisionned it to have. The rest 
 
 Currently the app supports:
 
-  * Signing in/ Signing out.
+  * Signing in/ Signing out (Firebase).
   * Saving glucose logs and calculating the average.
   * Saving and ticking down Fast acting insulin and Basal insulin shots with different speeds.
   * Adding alarms with custom comments.
